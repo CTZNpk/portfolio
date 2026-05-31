@@ -356,9 +356,9 @@ function ExperienceSection() {
         title="Engineering work with product sense."
         description="Placeholder roles for now, ready to replace with your real work history."
       />
-      <CardGrid className="lg:grid-cols-2">
+      <div className="mt-10 grid gap-5 lg:grid-cols-2">
         {experience.map((item) => (
-          <MotionCard key={`${item.role}-${item.company}`}>
+          <PortfolioCard key={`${item.role}-${item.company}`}>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h3 className="text-xl font-semibold text-emerald-950">
@@ -373,9 +373,9 @@ function ExperienceSection() {
               </p>
             </div>
             <p className="mt-5 leading-7 text-[#43584d]">{item.summary}</p>
-          </MotionCard>
+          </PortfolioCard>
         ))}
-      </CardGrid>
+      </div>
     </AnimatedSection>
   );
 }
@@ -388,9 +388,9 @@ function EducationSection() {
         title="A foundation for solving real problems."
         description="Use this section for degrees, certifications, and focused learning."
       />
-      <CardGrid className="md:grid-cols-2">
+      <div className="mt-10 grid gap-5 md:grid-cols-2">
         {education.map((item) => (
-          <MotionCard key={`${item.degree}-${item.school}`}>
+          <PortfolioCard key={`${item.degree}-${item.school}`}>
             <p className="text-sm font-semibold text-emerald-700">
               {item.period}
             </p>
@@ -398,9 +398,9 @@ function EducationSection() {
               {item.degree}
             </h3>
             <p className="mt-2 text-[#4b6155]">{item.school}</p>
-          </MotionCard>
+          </PortfolioCard>
         ))}
-      </CardGrid>
+      </div>
     </AnimatedSection>
   );
 }
@@ -413,9 +413,9 @@ function ProjectsSection({ onContact }: { onContact: () => void }) {
         title="Selected work and product ideas."
         description="Placeholder projects that can be swapped with live links, case studies, and GitHub repositories."
       />
-      <CardGrid className="lg:grid-cols-3">
+      <div className="mt-10 grid gap-5 lg:grid-cols-3">
         {projects.map((project) => (
-          <MotionCard
+          <PortfolioCard
             className="flex min-h-64 flex-col justify-between hover:-translate-y-1 hover:border-emerald-700/30 hover:shadow-[0_18px_48px_rgba(16,96,64,0.12)]"
             key={project.name}
           >
@@ -437,9 +437,9 @@ function ProjectsSection({ onContact }: { onContact: () => void }) {
             >
               Request details
             </button>
-          </MotionCard>
+          </PortfolioCard>
         ))}
-      </CardGrid>
+      </div>
     </AnimatedSection>
   );
 }
@@ -514,34 +514,7 @@ function AnimatedSection({
   );
 }
 
-function CardGrid({
-  className,
-  children,
-}: {
-  className: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <motion.div
-      className={`mt-10 grid gap-5 ${className}`}
-      initial="hidden"
-      animate="show"
-      variants={{
-        hidden: {},
-        show: {
-          transition: {
-            staggerChildren: 0.12,
-            delayChildren: 0.08,
-          },
-        },
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function MotionCard({
+function PortfolioCard({
   className = "",
   children,
 }: {
@@ -549,20 +522,11 @@ function MotionCard({
   children: React.ReactNode;
 }) {
   return (
-    <motion.article
+    <article
       className={`border border-emerald-900/10 bg-[#fbfdfb] p-6 transition ${className}`}
-      variants={{
-        hidden: { opacity: 0, y: 42, scale: 0.98 },
-        show: {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          transition: contentTransition,
-        },
-      }}
     >
       {children}
-    </motion.article>
+    </article>
   );
 }
 
