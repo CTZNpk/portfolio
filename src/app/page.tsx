@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 type Direction = "up" | "down";
-type TransitionPhase = "idle" | "covering" | "revealing";
 
 const navItems = [
   { label: "Home", id: "top" },
@@ -67,8 +66,8 @@ const projects = [
 ];
 
 const sectionTransition = {
-  duration: 0.72,
-  ease: [0.76, 0, 0.24, 1],
+  duration: 0.7,
+  ease: [0.22, 1, 0.36, 1],
 } as const;
 
 const contentTransition = {
@@ -79,7 +78,6 @@ const contentTransition = {
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<Direction>("down");
-  const [phase, setPhase] = useState<TransitionPhase>("idle");
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const isTransitioning = useRef(false);
   const prefersReducedMotion = useReducedMotion();
@@ -97,24 +95,12 @@ export default function Home() {
 
       const nextDirection: Direction = nextIndex > activeIndex ? "down" : "up";
       setDirection(nextDirection);
-
-      if (prefersReducedMotion) {
-        setActiveIndex(nextIndex);
-        return;
-      }
-
       isTransitioning.current = true;
-      setPhase("covering");
+      setActiveIndex(nextIndex);
 
       window.setTimeout(() => {
-        setActiveIndex(nextIndex);
-        setPhase("revealing");
-      }, 520);
-
-      window.setTimeout(() => {
-        setPhase("idle");
         isTransitioning.current = false;
-      }, 1120);
+      }, prefersReducedMotion ? 120 : 760);
     },
     [activeIndex, prefersReducedMotion],
   );
@@ -242,7 +228,6 @@ export default function Home() {
       </SectionViewport>
 
       <SectionRail activeIndex={activeIndex} goToSection={goToSection} />
-      <StripTransition direction={direction} phase={phase} />
     </main>
   );
 }
@@ -257,21 +242,43 @@ function SectionViewport({
   children: React.ReactNode;
 }) {
   return (
-    <motion.div
-      key={activeIndex}
-      className="h-full"
-      initial={{
-        opacity: 0,
-        y: direction === "down" ? 28 : -28,
-        scale: 0.985,
-      }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={contentTransition}
-    >
-      {children}
-    </motion.div>
+    <AnimatePresence custom={direction} mode="wait" initial={false}>
+      <motion.div
+        key={activeIndex}
+        className="h-full"
+        custom={direction}
+        variants={sectionVariants}
+        initial="enter"
+        animate="center"
+        exit="exit"
+        transition={sectionTransition}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
 }
+
+const sectionVariants = {
+  enter: (direction: Direction) => ({
+    opacity: 0,
+    y: direction === "down" ? 90 : -90,
+    scale: 0.975,
+    filter: "blur(10px)",
+  }),
+  center: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: "blur(0px)",
+  },
+  exit: (direction: Direction) => ({
+    opacity: 0,
+    y: direction === "down" ? -90 : 90,
+    scale: 1.025,
+    filter: "blur(10px)",
+  }),
+};
 
 function HeroSection({
   onViewProjects,
@@ -581,43 +588,6 @@ function SectionHeader({
   );
 }
 
-function StripTransition({
-  direction,
-  phase,
-}: {
-  direction: Direction;
-  phase: TransitionPhase;
-}) {
-  const hiddenPosition = direction === "down" ? "100%" : "-100%";
-  const exitPosition = direction === "down" ? "-100%" : "100%";
-  const targetY =
-    phase === "covering" ? "0%" : phase === "revealing" ? exitPosition : hiddenPosition;
-
-  return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[60] grid grid-cols-4"
-    >
-      {[0, 1, 2, 3].map((strip) => (
-        <motion.div
-          key={strip}
-          className={`h-full ${
-            strip % 2 === 0 ? "bg-emerald-950" : "bg-emerald-800"
-          }`}
-          initial={false}
-          animate={{ y: targetY }}
-          transition={{
-            ...sectionTransition,
-            delay:
-              phase === "covering"
-                ? strip * 0.045
-                : (3 - strip) * 0.045,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 function SectionRail({
   activeIndex,
