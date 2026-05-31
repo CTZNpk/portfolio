@@ -182,38 +182,6 @@ export default function Home() {
         transition={contentTransition}
       />
 
-      <div className="fixed inset-x-0 top-0 z-40 border-b border-emerald-900/10 bg-[#f7fbf7]/86 backdrop-blur-xl">
-        <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-14">
-          <button
-            type="button"
-            onClick={() => goToSection(0)}
-            className="text-lg font-semibold text-emerald-950"
-          >
-            CTZNpk
-          </button>
-          <div className="hidden items-center gap-7 text-sm font-medium text-[#395246] sm:flex">
-            {navItems.slice(1).map((item, index) => {
-              const sectionIndex = index + 1;
-
-              return (
-                <button
-                  className={`transition hover:text-emerald-700 ${
-                    activeIndex === sectionIndex
-                      ? "text-emerald-700"
-                      : "text-[#395246]"
-                  }`}
-                  onClick={() => goToSection(sectionIndex)}
-                  type="button"
-                  key={item.id}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </div>
-        </nav>
-      </div>
-
       <SectionViewport activeIndex={activeIndex} direction={direction}>
         {activeIndex === 0 && (
           <HeroSection
