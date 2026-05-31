@@ -26,14 +26,7 @@ body {
 }
 
 html {
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-}
-
-@media (max-width: 767px) {
-  html {
-    scroll-snap-type: y proximity;
-  }
+  scroll-behavior: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
