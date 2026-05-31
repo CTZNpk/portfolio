@@ -1,4 +1,14 @@
+"use client";
+
 import Image from "next/image";
+import { motion, useScroll, useSpring, useTransform } from "motion/react";
+
+const navItems = [
+  { label: "Experience", href: "#experience" },
+  { label: "Education", href: "#education" },
+  { label: "Projects", href: "#projects" },
+  { label: "Contact", href: "#contact" },
+];
 
 const experience = [
   {
@@ -51,88 +61,125 @@ const projects = [
   },
 ];
 
+const sectionTransition = {
+  duration: 0.8,
+  ease: [0.22, 1, 0.36, 1],
+} as const;
+
 export default function Home() {
+  const { scrollYProgress } = useScroll();
+  const progressScale = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 28,
+    restDelta: 0.001,
+  });
+  const heroImageY = useTransform(scrollYProgress, [0, 0.3], [0, -70]);
+
   return (
     <main className="min-h-screen bg-[#f7fbf7] text-[#102018]">
-      <section className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-6 py-8 sm:px-10 lg:px-14">
-        <nav className="flex items-center justify-between border-b border-emerald-900/10 pb-5">
+      <motion.div
+        aria-hidden="true"
+        className="fixed left-0 top-0 z-50 h-1 w-full origin-left bg-emerald-600"
+        style={{ scaleX: progressScale }}
+      />
+
+      <div className="fixed inset-x-0 top-0 z-40 border-b border-emerald-900/10 bg-[#f7fbf7]/86 backdrop-blur-xl">
+        <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-14">
           <a href="#top" className="text-lg font-semibold text-emerald-950">
             CTZNpk
           </a>
           <div className="hidden items-center gap-7 text-sm font-medium text-[#395246] sm:flex">
-            <a className="hover:text-emerald-700" href="#experience">
-              Experience
-            </a>
-            <a className="hover:text-emerald-700" href="#education">
-              Education
-            </a>
-            <a className="hover:text-emerald-700" href="#projects">
-              Projects
-            </a>
-            <a className="hover:text-emerald-700" href="#contact">
-              Contact
-            </a>
+            {navItems.map((item) => (
+              <a
+                className="transition hover:text-emerald-700"
+                href={item.href}
+                key={item.href}
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
         </nav>
+      </div>
 
-        <div
+      <div className="snap-y snap-mandatory overflow-x-hidden">
+        <section
           id="top"
-          className="grid flex-1 items-center gap-12 py-12 lg:grid-cols-[1.08fr_0.92fr] lg:py-16"
+          className="flex min-h-screen snap-start items-center px-6 py-24 sm:px-10 lg:px-14"
         >
-          <div className="max-w-3xl">
-            <p className="mb-5 inline-flex border border-emerald-700/20 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 shadow-sm">
-              Software Developer
-            </p>
-            <h1 className="text-5xl font-semibold leading-[1.04] text-emerald-950 sm:text-6xl lg:text-7xl">
-              Building clean, useful software for the web.
-            </h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-[#41594c] sm:text-xl">
-              I am a software developer focused on creating thoughtful digital
-              products with strong engineering foundations, polished interfaces,
-              and practical user experiences.
-            </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#projects"
-                className="inline-flex h-12 items-center justify-center bg-emerald-700 px-6 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
+          <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
+            <motion.div
+              className="max-w-3xl"
+              initial={{ opacity: 0, y: 34 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={sectionTransition}
+            >
+              <motion.p
+                className="mb-5 inline-flex border border-emerald-700/20 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 shadow-sm"
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ ...sectionTransition, delay: 0.12 }}
               >
-                View Projects
-              </a>
-              <a
-                href="#contact"
-                className="inline-flex h-12 items-center justify-center border border-emerald-900/15 bg-white px-6 text-sm font-semibold text-emerald-900 transition hover:border-emerald-700/40 hover:text-emerald-700"
-              >
-                Email Me
-              </a>
-            </div>
-          </div>
+                Software Developer
+              </motion.p>
+              <h1 className="text-5xl font-semibold leading-[1.04] text-emerald-950 sm:text-6xl lg:text-7xl">
+                Building clean, useful software for the web.
+              </h1>
+              <p className="mt-7 max-w-2xl text-lg leading-8 text-[#41594c] sm:text-xl">
+                I am a software developer focused on creating thoughtful digital
+                products with strong engineering foundations, polished
+                interfaces, and practical user experiences.
+              </p>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="#projects"
+                  className="inline-flex h-12 items-center justify-center bg-emerald-700 px-6 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-800"
+                >
+                  View Projects
+                </a>
+                <a
+                  href="#contact"
+                  className="inline-flex h-12 items-center justify-center border border-emerald-900/15 bg-white px-6 text-sm font-semibold text-emerald-900 transition hover:-translate-y-0.5 hover:border-emerald-700/40 hover:text-emerald-700"
+                >
+                  Email Me
+                </a>
+              </div>
+            </motion.div>
 
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[430px] overflow-hidden border border-emerald-900/10 bg-white shadow-[0_24px_80px_rgba(16,96,64,0.16)]">
-            <Image
-              src="/profile-placeholder.svg"
-              alt="Profile placeholder for portfolio owner"
-              fill
-              priority
-              className="object-cover"
-              sizes="(min-width: 1024px) 430px, 90vw"
-            />
+            <motion.div
+              className="relative mx-auto aspect-[4/5] w-full max-w-[430px] overflow-hidden border border-emerald-900/10 bg-white shadow-[0_24px_80px_rgba(16,96,64,0.16)]"
+              initial={{ opacity: 0, scale: 0.94, y: 40 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ ...sectionTransition, delay: 0.18 }}
+              style={{ y: heroImageY }}
+            >
+              <Image
+                src="/profile-placeholder.svg"
+                alt="Profile placeholder for portfolio owner"
+                fill
+                priority
+                className="object-cover"
+                sizes="(min-width: 1024px) 430px, 90vw"
+              />
+            </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="experience" className="bg-white py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-14">
+        <AnimatedSection id="experience" tone="white">
           <SectionHeader
             label="Experience"
             title="Engineering work with product sense."
             description="Placeholder roles for now, ready to replace with your real work history."
           />
-          <div className="mt-10 grid gap-5 lg:grid-cols-2">
+          <motion.div
+            className="mt-10 grid gap-5 lg:grid-cols-2"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: false, amount: 0.32 }}
+          >
             {experience.map((item) => (
-              <article
-                className="border border-emerald-900/10 bg-[#fbfdfb] p-6"
-                key={`${item.role}-${item.company}`}
-              >
+              <MotionCard key={`${item.role}-${item.company}`}>
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <h3 className="text-xl font-semibold text-emerald-950">
@@ -147,25 +194,26 @@ export default function Home() {
                   </p>
                 </div>
                 <p className="mt-5 leading-7 text-[#43584d]">{item.summary}</p>
-              </article>
+              </MotionCard>
             ))}
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        </AnimatedSection>
 
-      <section id="education" className="bg-[#f7fbf7] py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-14">
+        <AnimatedSection id="education" tone="green">
           <SectionHeader
             label="Education"
             title="A foundation for solving real problems."
             description="Use this section for degrees, certifications, and focused learning."
           />
-          <div className="mt-10 grid gap-5 md:grid-cols-2">
+          <motion.div
+            className="mt-10 grid gap-5 md:grid-cols-2"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: false, amount: 0.32 }}
+          >
             {education.map((item) => (
-              <article
-                className="border border-emerald-900/10 bg-white p-6"
-                key={`${item.degree}-${item.school}`}
-              >
+              <MotionCard key={`${item.degree}-${item.school}`}>
                 <p className="text-sm font-semibold text-emerald-700">
                   {item.period}
                 </p>
@@ -173,23 +221,27 @@ export default function Home() {
                   {item.degree}
                 </h3>
                 <p className="mt-2 text-[#4b6155]">{item.school}</p>
-              </article>
+              </MotionCard>
             ))}
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        </AnimatedSection>
 
-      <section id="projects" className="bg-white py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-14">
+        <AnimatedSection id="projects" tone="white">
           <SectionHeader
             label="Projects"
             title="Selected work and product ideas."
             description="Placeholder projects that can be swapped with live links, case studies, and GitHub repositories."
           />
-          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+          <motion.div
+            className="mt-10 grid gap-5 lg:grid-cols-3"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: false, amount: 0.25 }}
+          >
             {projects.map((project) => (
-              <article
-                className="flex min-h-64 flex-col justify-between border border-emerald-900/10 bg-[#fbfdfb] p-6 transition hover:-translate-y-1 hover:border-emerald-700/30 hover:shadow-[0_18px_48px_rgba(16,96,64,0.12)]"
+              <MotionCard
+                className="flex min-h-64 flex-col justify-between hover:-translate-y-1 hover:border-emerald-700/30 hover:shadow-[0_18px_48px_rgba(16,96,64,0.12)]"
                 key={project.name}
               >
                 <div>
@@ -209,37 +261,118 @@ export default function Home() {
                 >
                   Request details
                 </a>
-              </article>
+              </MotionCard>
             ))}
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        </AnimatedSection>
 
-      <section id="contact" className="bg-emerald-950 py-20 text-white sm:py-24">
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 sm:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:px-14">
-          <div>
-            <p className="text-sm font-semibold uppercase text-emerald-300">
-              Email Me
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl">
-              Let&apos;s build something useful.
-            </h2>
-          </div>
-          <div className="border border-white/10 bg-white/5 p-6 sm:p-8">
-            <p className="text-lg leading-8 text-emerald-50/85">
-              Have a project, collaboration, or role in mind? Send me an email
-              and I&apos;ll get back to you.
-            </p>
-            <a
-              href="mailto:hello@example.com"
-              className="mt-8 inline-flex h-12 items-center justify-center bg-white px-6 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-100"
+        <section
+          id="contact"
+          className="flex min-h-screen snap-start items-center bg-emerald-950 px-6 py-24 text-white sm:px-10 lg:px-14"
+        >
+          <motion.div
+            className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr]"
+            initial={{ opacity: 0, y: 44 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.45 }}
+            transition={sectionTransition}
+          >
+            <div>
+              <p className="text-sm font-semibold uppercase text-emerald-300">
+                Email Me
+              </p>
+              <h2 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl">
+                Let&apos;s build something useful.
+              </h2>
+            </div>
+            <motion.div
+              className="border border-white/10 bg-white/5 p-6 sm:p-8"
+              initial={{ opacity: 0, scale: 0.96 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: false, amount: 0.45 }}
+              transition={{ ...sectionTransition, delay: 0.12 }}
             >
-              hello@example.com
-            </a>
-          </div>
-        </div>
-      </section>
+              <p className="text-lg leading-8 text-emerald-50/85">
+                Have a project, collaboration, or role in mind? Send me an email
+                and I&apos;ll get back to you.
+              </p>
+              <a
+                href="mailto:hello@example.com"
+                className="mt-8 inline-flex h-12 items-center justify-center bg-white px-6 text-sm font-semibold text-emerald-950 transition hover:-translate-y-0.5 hover:bg-emerald-100"
+              >
+                hello@example.com
+              </a>
+            </motion.div>
+          </motion.div>
+        </section>
+      </div>
     </main>
+  );
+}
+
+const staggerContainer = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 42, scale: 0.98 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: sectionTransition,
+  },
+};
+
+function AnimatedSection({
+  id,
+  tone,
+  children,
+}: {
+  id: string;
+  tone: "green" | "white";
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      id={id}
+      className={`flex min-h-screen snap-start items-center px-6 py-24 sm:px-10 lg:px-14 ${
+        tone === "white" ? "bg-white" : "bg-[#f7fbf7]"
+      }`}
+    >
+      <motion.div
+        className="mx-auto w-full max-w-7xl"
+        initial={{ opacity: 0, y: 44 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.35 }}
+        transition={sectionTransition}
+      >
+        {children}
+      </motion.div>
+    </section>
+  );
+}
+
+function MotionCard({
+  className = "",
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.article
+      className={`border border-emerald-900/10 bg-[#fbfdfb] p-6 transition ${className}`}
+      variants={cardVariants}
+    >
+      {children}
+    </motion.article>
   );
 }
 
