@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { contentTransition, projects } from "@/components/landing-page/const";
 
+type Project = (typeof projects)[number];
+
 export default function ProjectsSection({
   onContact,
 }: {
@@ -11,7 +13,18 @@ export default function ProjectsSection({
 }) {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isLargeViewport, setIsLargeViewport] = useState(false);
   const activeProject = projects[activeIndex] ?? projects[0];
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
+    const updateViewport = () => setIsLargeViewport(mediaQuery.matches);
+
+    updateViewport();
+    mediaQuery.addEventListener("change", updateViewport);
+
+    return () => mediaQuery.removeEventListener("change", updateViewport);
+  }, []);
 
   useEffect(() => {
     const cards = Array.from(
@@ -51,42 +64,8 @@ export default function ProjectsSection({
       className="bg-white px-6 sm:px-10 lg:px-14"
     >
       <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="lg:sticky lg:top-0 lg:flex lg:h-svh lg:items-center">
-          <motion.div
-            className="relative my-20 aspect-[4/5] w-full overflow-hidden border border-emerald-900/10 bg-white shadow-[0_24px_80px_rgba(16,96,64,0.14)] lg:my-0"
-            style={{ background: activeProject.accent }}
-            initial={{ opacity: 0, y: 44 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={contentTransition}
-          >
-            <motion.div
-              key={activeProject.name}
-              className="absolute inset-0 flex flex-col justify-between p-8 lg:p-10"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={contentTransition}
-            >
-              <div className="flex items-start justify-between gap-6">
-                <p className="text-sm font-semibold uppercase text-emerald-800">
-                  Project image
-                </p>
-                <p className="font-mono text-sm text-emerald-950/60">
-                  0{activeIndex + 1}
-                </p>
-              </div>
-              <div>
-                <p className="text-6xl font-semibold leading-none text-emerald-950 sm:text-7xl">
-                  {activeProject.imageLabel}
-                </p>
-                <div className="mt-8 grid grid-cols-3 gap-3">
-                  <div className="h-24 border border-emerald-950/10 bg-white/45" />
-                  <div className="h-24 border border-emerald-950/10 bg-white/35" />
-                  <div className="h-24 border border-emerald-950/10 bg-white/25" />
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
+        <div className="hidden lg:sticky lg:top-0 lg:flex lg:h-svh lg:items-center">
+          <ProjectImage project={activeProject} index={activeIndex} />
         </div>
 
         <div className="py-20 lg:py-0">
@@ -108,11 +87,18 @@ export default function ProjectsSection({
               key={project.name}
               data-project={index}
               className="flex min-h-svh flex-col justify-center border-b border-emerald-900/10 py-20"
-              initial={{ opacity: 0.35 }}
-              whileInView={{ opacity: 1 }}
+              initial={isLargeViewport ? { opacity: 0.35 } : false}
+              whileInView={isLargeViewport ? { opacity: 1 } : undefined}
               viewport={{ amount: 0.55 }}
               transition={contentTransition}
             >
+              <div className="mb-8 lg:hidden">
+                <ProjectImage
+                  project={project}
+                  index={index}
+                  animateOnView={false}
+                />
+              </div>
               <p className="text-sm font-semibold uppercase text-emerald-700">
                 {project.type}
               </p>
@@ -134,5 +120,53 @@ export default function ProjectsSection({
         </div>
       </div>
     </section>
+  );
+}
+
+function ProjectImage({
+  project,
+  index,
+  animateOnView = true,
+}: {
+  project: Project;
+  index: number;
+  animateOnView?: boolean;
+}) {
+  return (
+    <motion.div
+      className="relative aspect-[4/5] w-full overflow-hidden border border-emerald-900/10 bg-white shadow-[0_24px_80px_rgba(16,96,64,0.14)]"
+      style={{ background: project.accent }}
+      initial={animateOnView ? { opacity: 0, y: 44 } : false}
+      whileInView={animateOnView ? { opacity: 1, y: 0 } : undefined}
+      viewport={{ once: true, amount: 0.35 }}
+      transition={contentTransition}
+    >
+      <motion.div
+        key={project.name}
+        className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8 lg:p-10"
+        initial={animateOnView ? { opacity: 0, y: 24 } : false}
+        animate={animateOnView ? { opacity: 1, y: 0 } : undefined}
+        transition={contentTransition}
+      >
+        <div className="flex items-start justify-between gap-6">
+          <p className="text-sm font-semibold uppercase text-emerald-800">
+            Project image
+          </p>
+          <p className="font-mono text-sm text-emerald-950/60">
+            0{index + 1}
+          </p>
+        </div>
+        <div>
+          <p className="text-5xl font-semibold leading-none text-emerald-950 sm:text-7xl">
+            {project.imageLabel}
+          </p>
+          <div className="mt-8 grid grid-cols-3 gap-3">
+            <div className="h-16 border border-emerald-950/10 bg-white/45 sm:h-24" />
+            <div className="h-16 border border-emerald-950/10 bg-white/35 sm:h-24" />
+            <div className="h-16 border border-emerald-950/10 bg-white/25 sm:h-24" />
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { ReactLenis, useLenis } from "lenis/react";
 import { motion, useReducedMotion } from "motion/react";
 import { contentTransition, navItems } from "@/components/landing-page/const";
@@ -9,7 +9,6 @@ import EducationSection from "@/components/landing-page/sections/EducationSectio
 import ExperienceSection from "@/components/landing-page/sections/ExperienceSection";
 import HeroSection from "@/components/landing-page/sections/HeroSection";
 import ProjectsSection from "@/components/landing-page/sections/ProjectsSection";
-import SectionRail from "@/components/landing-page/SectionRail";
 
 export default function LandingPage() {
   const prefersReducedMotion = useReducedMotion();
@@ -31,42 +30,10 @@ export default function LandingPage() {
 }
 
 function LandingPageContent() {
-  const [activeIndex, setActiveIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const lenis = useLenis(({ progress }) => {
     setProgress(progress * 100);
   });
-
-  useEffect(() => {
-    const sections = navItems
-      .map((item) => document.getElementById(item.id))
-      .filter((section): section is HTMLElement => Boolean(section));
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (!visibleEntry) {
-          return;
-        }
-
-        const nextIndex = navItems.findIndex(
-          (item) => item.id === visibleEntry.target.id,
-        );
-
-        if (nextIndex >= 0) {
-          setActiveIndex(nextIndex);
-        }
-      },
-      { threshold: [0.35, 0.5, 0.65] },
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
-  }, []);
 
   const goToSection = useCallback(
     (index: number) => {
@@ -105,8 +72,6 @@ function LandingPageContent() {
       <EducationSection />
       <ProjectsSection onContact={() => goToSection(4)} />
       <ContactSection />
-
-      <SectionRail activeIndex={activeIndex} goToSection={goToSection} />
     </main>
   );
 }
