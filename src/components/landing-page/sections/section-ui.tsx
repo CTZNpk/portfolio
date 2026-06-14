@@ -1,8 +1,4 @@
-"use client";
-
 import type { ReactNode } from "react";
-import { motion } from "motion/react";
-import { contentTransition } from "@/components/landing-page/const";
 
 export function AnimatedSection({
   id,
@@ -20,15 +16,9 @@ export function AnimatedSection({
         tone === "white" ? "bg-white" : "bg-[#f7fbf7]"
       }`}
     >
-      <motion.div
-        className="mx-auto w-full max-w-7xl"
-        initial={{ opacity: 0, y: 44 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.35 }}
-        transition={contentTransition}
-      >
+      <div className="mx-auto w-full max-w-7xl">
         {children}
-      </motion.div>
+      </div>
     </section>
   );
 }
