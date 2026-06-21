@@ -21,7 +21,10 @@ export function getMongoClient() {
 
   if (!globalThis.portfolioMongoClientPromise) {
     const client = new MongoClient(uri);
-    globalThis.portfolioMongoClientPromise = client.connect();
+    globalThis.portfolioMongoClientPromise = client.connect().catch((error) => {
+      globalThis.portfolioMongoClientPromise = undefined;
+      throw error;
+    });
   }
 
   return globalThis.portfolioMongoClientPromise;
