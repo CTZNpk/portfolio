@@ -10,8 +10,17 @@ import {
 } from "@/lib/auth/session";
 import {
   normalizePortfolioContent,
+  readPortfolioContent,
   savePortfolioContent,
 } from "@/lib/portfolio/content";
+
+function revalidatePortfolioRoutes() {
+  revalidatePath("/");
+  revalidatePath("/blogs");
+  revalidatePath("/experience");
+  revalidatePath("/resume");
+  revalidatePath("/admin");
+}
 
 export async function loginAction(formData: FormData) {
   const username = String(formData.get("username") || "");
@@ -56,7 +65,41 @@ export async function savePortfolioJsonAction(formData: FormData) {
   );
 
   await savePortfolioContent(content);
-  revalidatePath("/");
-  revalidatePath("/admin");
+  revalidatePortfolioRoutes();
   redirect("/admin?saved=1");
+}
+
+export async function saveResumeConfigAction(formData: FormData) {
+  const session = await getAdminSession();
+
+  if (!session) {
+    redirect("/admin?error=session");
+  }
+
+  const currentContent = await readPortfolioContent();
+  const field = (name: string, fallback: string) => {
+    const value = String(formData.get(name) || "").trim();
+    return value || fallback;
+  };
+  const nextContent = normalizePortfolioContent({
+    ...currentContent,
+    resume: {
+      eyebrow: field("resumeEyebrow", currentContent.resume.eyebrow),
+      title: field("resumeTitle", currentContent.resume.title),
+      description: field(
+        "resumeDescription",
+        currentContent.resume.description,
+      ),
+      pdfUrl: field("resumePdfUrl", currentContent.resume.pdfUrl),
+      openLabel: field("resumeOpenLabel", currentContent.resume.openLabel),
+      fallbackLabel: field(
+        "resumeFallbackLabel",
+        currentContent.resume.fallbackLabel,
+      ),
+    },
+  });
+
+  await savePortfolioContent(nextContent);
+  revalidatePortfolioRoutes();
+  redirect("/admin?saved=resume");
 }

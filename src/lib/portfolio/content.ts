@@ -17,8 +17,10 @@ import type {
   PortfolioContent,
   ProjectItem,
   ProjectsContent,
+  ResumeContent,
   SkillGroup,
   SkillsContent,
+  SocialLink,
 } from "@/lib/portfolio/types";
 
 const COLLECTION_NAME = "portfolioContent";
@@ -58,6 +60,7 @@ function normalizeNavItems(value: unknown, fallback: NavItem[]) {
     .map((item, index) => ({
       label: text(item.label, fallback[index]?.label || "Section"),
       id: text(item.id, fallback[index]?.id || "section"),
+      href: text(item.href, fallback[index]?.href || ""),
     }));
 
   return items.length > 0 ? items : fallback;
@@ -142,15 +145,28 @@ function normalizeBlogPost(value: unknown, fallback: BlogPost): BlogPost {
 function normalizeBlog(value: unknown, fallback: BlogContent): BlogContent {
   const input = isRecord(value) ? value : {};
   const incomingPosts = Array.isArray(input.posts) ? input.posts : [];
+  const fallbackPost = fallback.posts[0] || {
+    title: "Untitled",
+    date: "Draft",
+    summary: "",
+  };
 
   return {
     eyebrow: text(input.eyebrow, fallback.eyebrow),
     title: text(input.title, fallback.title),
     description: text(input.description, fallback.description),
+    emailLabel: text(input.emailLabel, fallback.emailLabel),
+    emailPlaceholder: text(input.emailPlaceholder, fallback.emailPlaceholder),
+    notifyButtonLabel: text(
+      input.notifyButtonLabel,
+      fallback.notifyButtonLabel,
+    ),
+    successMessage: text(input.successMessage, fallback.successMessage),
+    contactPrompt: text(input.contactPrompt, fallback.contactPrompt),
     posts:
       incomingPosts.length > 0
         ? incomingPosts.map((post, index) =>
-            normalizeBlogPost(post, fallback.posts[index] || fallback.posts[0]),
+            normalizeBlogPost(post, fallback.posts[index] || fallbackPost),
           )
         : fallback.posts,
   };
@@ -236,6 +252,49 @@ function normalizeContact(
   };
 }
 
+function normalizeSocialLink(value: unknown, fallback: SocialLink): SocialLink {
+  const input = isRecord(value) ? value : {};
+
+  return {
+    label: text(input.label, fallback.label),
+    href: text(input.href, fallback.href),
+  };
+}
+
+function normalizeSocialLinks(value: unknown, fallback: SocialLink[]) {
+  if (!Array.isArray(value)) {
+    return fallback;
+  }
+
+  const fallbackItem = fallback[0] || {
+    label: "Link",
+    href: "#",
+  };
+  const links = value
+    .filter(isRecord)
+    .map((link, index) =>
+      normalizeSocialLink(link, fallback[index] || fallbackItem),
+    );
+
+  return links;
+}
+
+function normalizeResume(
+  value: unknown,
+  fallback: ResumeContent,
+): ResumeContent {
+  const input = isRecord(value) ? value : {};
+
+  return {
+    eyebrow: text(input.eyebrow, fallback.eyebrow),
+    title: text(input.title, fallback.title),
+    description: text(input.description, fallback.description),
+    pdfUrl: text(input.pdfUrl, fallback.pdfUrl),
+    openLabel: text(input.openLabel, fallback.openLabel),
+    fallbackLabel: text(input.fallbackLabel, fallback.fallbackLabel),
+  };
+}
+
 export function normalizePortfolioContent(value: unknown): PortfolioContent {
   const input = isRecord(value) ? value : {};
   const metadata = isRecord(input.metadata) ? input.metadata : {};
@@ -261,6 +320,11 @@ export function normalizePortfolioContent(value: unknown): PortfolioContent {
     skills: normalizeSkills(input.skills, defaultPortfolioContent.skills),
     projects: normalizeProjects(input.projects, defaultPortfolioContent.projects),
     contact: normalizeContact(input.contact, defaultPortfolioContent.contact),
+    resume: normalizeResume(input.resume, defaultPortfolioContent.resume),
+    socialLinks: normalizeSocialLinks(
+      input.socialLinks,
+      defaultPortfolioContent.socialLinks,
+    ),
   };
 }
 

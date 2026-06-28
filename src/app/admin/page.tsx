@@ -8,6 +8,7 @@ import {
   loginAction,
   logoutAction,
   savePortfolioJsonAction,
+  saveResumeConfigAction,
 } from "@/app/admin/actions";
 
 export const dynamic = "force-dynamic";
@@ -177,9 +178,9 @@ async function EditorView({
               Edit portfolio content
             </h1>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-[#4b6155]">
-              Update the JSON below to change the homepage content. This editor
-              writes through the same MongoDB-backed content layer used by the
-              public page.
+              Update the resume settings or edit the full JSON to change the
+              public pages. These forms write through the same MongoDB-backed
+              content layer used by the site.
             </p>
           </div>
 
@@ -199,6 +200,76 @@ async function EditorView({
             </Notice>
           ) : null}
         </div>
+
+        <form
+          action={saveResumeConfigAction}
+          className="mt-8 border border-emerald-900/10 bg-white p-5 shadow-[0_10px_28px_rgba(16,96,64,0.06)] sm:p-6"
+        >
+          <div>
+            <p className="text-sm font-semibold uppercase text-emerald-700">
+              Resume settings
+            </p>
+            <h2 className="mt-3 text-2xl font-semibold text-emerald-950">
+              Configure resume page
+            </h2>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <label className="grid gap-2 text-sm font-semibold text-emerald-950">
+              Eyebrow
+              <input
+                name="resumeEyebrow"
+                defaultValue={content.resume.eyebrow}
+                className="h-11 border border-emerald-900/15 px-3 text-base font-normal outline-none focus:border-emerald-700"
+              />
+            </label>
+            <label className="grid gap-2 text-sm font-semibold text-emerald-950">
+              Title
+              <input
+                name="resumeTitle"
+                defaultValue={content.resume.title}
+                className="h-11 border border-emerald-900/15 px-3 text-base font-normal outline-none focus:border-emerald-700"
+              />
+            </label>
+            <label className="grid gap-2 text-sm font-semibold text-emerald-950 md:col-span-2">
+              Description
+              <textarea
+                name="resumeDescription"
+                defaultValue={content.resume.description}
+                className="min-h-24 resize-y border border-emerald-900/15 px-3 py-2 text-base font-normal leading-7 outline-none focus:border-emerald-700"
+              />
+            </label>
+            <label className="grid gap-2 text-sm font-semibold text-emerald-950 md:col-span-2">
+              PDF URL
+              <input
+                name="resumePdfUrl"
+                defaultValue={content.resume.pdfUrl}
+                placeholder="/resume.pdf"
+                className="h-11 border border-emerald-900/15 px-3 text-base font-normal outline-none focus:border-emerald-700"
+              />
+            </label>
+            <label className="grid gap-2 text-sm font-semibold text-emerald-950">
+              Open button label
+              <input
+                name="resumeOpenLabel"
+                defaultValue={content.resume.openLabel}
+                className="h-11 border border-emerald-900/15 px-3 text-base font-normal outline-none focus:border-emerald-700"
+              />
+            </label>
+            <label className="grid gap-2 text-sm font-semibold text-emerald-950">
+              PDF fallback label
+              <input
+                name="resumeFallbackLabel"
+                defaultValue={content.resume.fallbackLabel}
+                className="h-11 border border-emerald-900/15 px-3 text-base font-normal outline-none focus:border-emerald-700"
+              />
+            </label>
+          </div>
+
+          <button className="mt-5 h-11 bg-emerald-700 px-5 text-sm font-semibold text-white transition hover:bg-emerald-800">
+            Save resume settings
+          </button>
+        </form>
 
         <form action={savePortfolioJsonAction} className="mt-8">
           <label className="block text-sm font-semibold text-emerald-950">

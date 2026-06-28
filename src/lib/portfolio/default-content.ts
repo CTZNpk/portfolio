@@ -4,29 +4,27 @@ export const defaultPortfolioContent: PortfolioContent = {
   metadata: {
     title: "Haider Sultan | Software Developer",
     description:
-      "Software developer portfolio featuring jobs, blog notes, projects, and contact information.",
+      "Minimal portfolio for Haider Sultan with experience, future blog updates, resume, and contact information.",
   },
   navItems: [
-    { label: "Home", id: "top" },
-    { label: "Jobs", id: "jobs" },
-    { label: "Skills", id: "skills" },
-    { label: "Blog", id: "blog" },
-    { label: "Projects", id: "projects" },
-    { label: "Contact", id: "contact" },
+    { label: "Home", id: "home", href: "/" },
+    { label: "Blogs", id: "blogs", href: "/blogs" },
+    { label: "Experience", id: "experience", href: "/experience" },
+    { label: "Resume", id: "resume", href: "/resume" },
   ],
   hero: {
     badge: "Software Developer",
     name: "Haider Sultan",
     headline: "Building clean, useful software for the web.",
     description:
-      "A simple portfolio with jobs, short writing, selected projects, and a direct way to get in touch.",
+      "I am a software developer focused on building practical web products with clean interfaces, maintainable code, and reliable user flows. I enjoy turning rough ideas into usable applications and improving existing systems so they feel simpler, faster, and easier to work with.",
     primaryCta: {
-      label: "View Projects",
-      href: "#projects",
+      label: "Get in touch",
+      href: "#contact",
     },
     secondaryCta: {
-      label: "Email Me",
-      href: "#contact",
+      label: "",
+      href: "",
     },
   },
   experience: {
@@ -69,20 +67,14 @@ export const defaultPortfolioContent: PortfolioContent = {
   },
   blog: {
     eyebrow: "Blog",
-    title: "Short notes",
-    description: "A small space for drafts and updates.",
-    posts: [
-      {
-        title: "Notes on building cleaner interfaces",
-        date: "Draft",
-        summary: "A short note on keeping web pages focused and easy to scan.",
-      },
-      {
-        title: "What I am learning now",
-        date: "Draft",
-        summary: "A place for current learning, tools, and engineering notes.",
-      },
-    ],
+    title: "Not any blogs yet",
+    description: "Get notified when the first blog is added.",
+    emailLabel: "Email address",
+    emailPlaceholder: "you@example.com",
+    notifyButtonLabel: "Notify me",
+    successMessage: "Thanks. I will use {email} for blog updates.",
+    contactPrompt: "This is a placeholder signup for now. You can also reach me at",
+    posts: [],
   },
   skills: {
     eyebrow: "Skills",
@@ -135,4 +127,26 @@ export const defaultPortfolioContent: PortfolioContent = {
     email: "hello@example.com",
     emailLabel: "hello@example.com",
   },
+  resume: {
+    eyebrow: "Resume",
+    title: "Dummy resume PDF",
+    description: "This placeholder is attached until the final resume is ready.",
+    pdfUrl: "/resume.pdf",
+    openLabel: "Open PDF",
+    fallbackLabel: "Open dummy resume PDF",
+  },
+  socialLinks: [
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/your-profile",
+    },
+    {
+      label: "Mail",
+      href: "mailto:contact",
+    },
+    {
+      label: "GitHub",
+      href: "https://github.com/your-username",
+    },
+  ],
 };

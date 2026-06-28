@@ -1,6 +1,7 @@
 export type NavItem = {
   label: string;
   id: string;
+  href?: string;
 };
 
 export type HeroContent = {
@@ -46,7 +47,26 @@ export type BlogContent = {
   eyebrow: string;
   title: string;
   description: string;
+  emailLabel: string;
+  emailPlaceholder: string;
+  notifyButtonLabel: string;
+  successMessage: string;
+  contactPrompt: string;
   posts: BlogPost[];
+};
+
+export type ResumeContent = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  pdfUrl: string;
+  openLabel: string;
+  fallbackLabel: string;
+};
+
+export type SocialLink = {
+  label: string;
+  href: string;
 };
 
 export type SkillGroup = {
@@ -94,4 +114,6 @@ export type PortfolioContent = {
   skills: SkillsContent;
   projects: ProjectsContent;
   contact: ContactContent;
+  resume: ResumeContent;
+  socialLinks: SocialLink[];
 };
