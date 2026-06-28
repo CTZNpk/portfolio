@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import PortfolioFooter from "@/components/landing-page/PortfolioFooter";
 import PortfolioHeader from "@/components/landing-page/PortfolioHeader";
 import BlogNotifyForm from "@/components/landing-page/sections/BlogNotifyForm";
+import Reveal from "@/components/ui/Reveal";
+import SectionIntro from "@/components/ui/SectionIntro";
 import { getPublicPortfolioContent } from "@/lib/portfolio/public-content";
 
 export const dynamic = "force-dynamic";
@@ -18,33 +20,73 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BlogsPage() {
   const content = await getPublicPortfolioContent();
+  const posts = content.blog.posts;
 
   return (
-    <div className="flex min-h-screen flex-col bg-white text-[#151815]">
+    <div className="flex min-h-screen flex-col bg-paper text-ink">
       <PortfolioHeader
         active="blogs"
         name={content.hero.name}
         navItems={content.navItems}
       />
 
-      <main className="flex-1 px-5 py-16 sm:px-8 lg:px-12">
-        <section className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.8fr_1fr] lg:items-start">
-          <div className="max-w-xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#0f6b48]">
-              {content.blog.eyebrow}
-            </p>
-            <h1 className="mt-4 text-3xl font-semibold leading-tight text-[#111611] sm:text-4xl">
-              {content.blog.title}
-            </h1>
-            <p className="mt-5 text-base leading-8 text-[#536059]">
-              {content.blog.description}
-            </p>
-          </div>
+      <main className="relative flex-1 overflow-hidden">
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+          <div className="animate-aurora-b absolute -left-24 top-10 h-72 w-72 rounded-full bg-brand-bright/12 blur-3xl" />
+        </div>
 
-          <BlogNotifyForm
-            content={content.blog}
-            contactEmail={content.contact.email}
+        <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+          <SectionIntro
+            eyebrow={content.blog.eyebrow}
+            title={content.blog.title}
+            description={content.blog.description}
           />
+
+          <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_0.82fr] lg:items-start">
+            {posts.length > 0 ? (
+              <div className="grid gap-4">
+                {posts.map((post, index) => (
+                  <Reveal key={post.title} delay={index * 80}>
+                    <article className="card-lift group border border-line bg-card p-6 shadow-sm hover:border-brand/30 hover:shadow-[0_22px_50px_-28px_rgba(16,80,52,0.5)]">
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+                        {post.date}
+                      </p>
+                      <h3 className="mt-3 text-xl font-semibold leading-snug text-ink transition group-hover:text-brand">
+                        {post.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-7 text-ink-soft">
+                        {post.summary}
+                      </p>
+                    </article>
+                  </Reveal>
+                ))}
+              </div>
+            ) : (
+              <Reveal direction="left">
+                <div className="flex h-full flex-col items-start justify-center border border-dashed border-brand/30 bg-card/60 p-8">
+                  <span className="relative mb-5 flex h-12 w-12 items-center justify-center">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand/30" />
+                    <span className="animate-pulse-soft relative inline-flex h-3 w-3 rounded-full bg-brand" />
+                  </span>
+                  <p className="text-xl font-semibold text-ink">
+                    The first post is brewing
+                  </p>
+                  <p className="mt-2 max-w-md text-sm leading-7 text-ink-soft">
+                    Notes on building for the web, lessons from shipping
+                    software, and the occasional deep dive — landing here soon.
+                    Drop your email and I&apos;ll let you know the moment it does.
+                  </p>
+                </div>
+              </Reveal>
+            )}
+
+            <Reveal direction="right" delay={80}>
+              <BlogNotifyForm
+                content={content.blog}
+                contactEmail={content.contact.email}
+              />
+            </Reveal>
+          </div>
         </section>
       </main>
 

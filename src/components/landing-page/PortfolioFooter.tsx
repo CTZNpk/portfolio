@@ -81,37 +81,63 @@ export default function PortfolioFooter({
   contactEmail: string;
   socialLinks: SocialLink[];
 }) {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="border-t border-[#dce5dc] bg-[#fbfbf7] px-5 py-6 sm:px-8 lg:px-12">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 sm:flex-row">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6a766d]">
-          {name}
-        </p>
+    <footer className="relative overflow-hidden border-t border-line bg-paper-2">
+      <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-brand/10 blur-3xl" />
 
-        {socialLinks.length > 0 ? (
-          <ul className="flex flex-wrap items-center justify-center gap-3">
-            {socialLinks.map((link) => {
-              const href = resolveSocialHref(link.href, contactEmail);
-              const isExternal = href.startsWith("http");
-              const kind = getSocialKind(link);
+      <div className="relative mx-auto max-w-6xl px-5 py-12 sm:px-8 lg:px-12">
+        <div className="flex flex-col gap-10 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand">
+              Let&apos;s talk
+            </p>
+            <p className="mt-3 font-serif text-3xl leading-tight text-ink sm:text-4xl">
+              {name}
+            </p>
+            <a
+              href={`mailto:${contactEmail}`}
+              className="link-sweep mt-3 inline-block text-sm font-medium text-ink-soft transition hover:text-brand"
+            >
+              {contactEmail}
+            </a>
+          </div>
 
-              return (
-                <li key={`${link.label}-${href}`}>
-                  <a
-                    href={href}
-                    target={isExternal ? "_blank" : undefined}
-                    rel={isExternal ? "noreferrer" : undefined}
-                    aria-label={link.label}
-                    title={link.label}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#dce5dc] bg-white text-[#4e5d53] transition hover:border-[#0f6b48]/40 hover:text-[#0f6b48]"
-                  >
-                    <SocialIcon kind={kind} />
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        ) : null}
+          {socialLinks.length > 0 ? (
+            <ul className="flex flex-wrap items-center gap-3">
+              {socialLinks.map((link) => {
+                const href = resolveSocialHref(link.href, contactEmail);
+                const isExternal = href.startsWith("http");
+                const kind = getSocialKind(link);
+
+                return (
+                  <li key={`${link.label}-${href}`}>
+                    <a
+                      href={href}
+                      target={isExternal ? "_blank" : undefined}
+                      rel={isExternal ? "noreferrer" : undefined}
+                      aria-label={link.label}
+                      title={link.label}
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line bg-card text-ink-soft shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand hover:bg-brand hover:text-white hover:shadow-md"
+                    >
+                      <SocialIcon kind={kind} />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
+        </div>
+
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 text-xs text-ink-faint sm:flex-row">
+          <p>
+            © {year} {name}. All rights reserved.
+          </p>
+          <p className="font-mono uppercase tracking-[0.16em]">
+            Crafted with Next.js
+          </p>
+        </div>
       </div>
     </footer>
   );
