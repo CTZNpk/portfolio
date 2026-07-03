@@ -59,7 +59,7 @@ export default async function ResumePage() {
                 href={content.resume.pdfUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="btn-shine inline-flex h-11 items-center justify-center gap-2 bg-brand px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-brand-deep"
+                className="btn-shine inline-flex h-11 items-center justify-center gap-2 bg-brand px-5 text-sm font-semibold text-brand-ink transition hover:-translate-y-0.5 hover:bg-brand-bright"
               >
                 {content.resume.openLabel}
                 <ExternalLinkIcon className="h-4 w-4" />

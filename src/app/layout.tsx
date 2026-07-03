@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
-      <body className="min-h-full flex flex-col bg-paper text-ink font-sans">
+      <body className="min-h-full flex flex-col text-ink font-sans">
         {/* Enables scroll-reveal styling without a flash; harmless if it never runs. */}
         <script
           dangerouslySetInnerHTML={{

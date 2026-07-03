@@ -52,7 +52,7 @@ export default function PortfolioHeader({
       <header className="sticky top-0 z-40 border-b border-line/70 bg-paper/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-3.5 sm:px-8 lg:px-12">
           <Link href="/" className="group flex shrink-0 items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center bg-brand text-[0.7rem] font-bold tracking-wide text-white shadow-sm transition duration-300 group-hover:-rotate-6 group-hover:bg-brand-deep">
+            <span className="grid h-9 w-9 place-items-center bg-brand text-[0.7rem] font-bold tracking-wide text-brand-ink shadow-sm transition duration-300 group-hover:-rotate-6 group-hover:bg-brand-bright">
               {initials}
             </span>
             <span className="hidden text-sm font-semibold uppercase tracking-[0.16em] text-ink transition group-hover:text-brand sm:inline">

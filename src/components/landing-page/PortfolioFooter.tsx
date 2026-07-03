@@ -119,7 +119,7 @@ export default function PortfolioFooter({
                       rel={isExternal ? "noreferrer" : undefined}
                       aria-label={link.label}
                       title={link.label}
-                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line bg-card text-ink-soft shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand hover:bg-brand hover:text-white hover:shadow-md"
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line bg-card text-ink-soft shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand hover:bg-brand hover:text-brand-ink hover:shadow-md"
                     >
                       <SocialIcon kind={kind} />
                     </a>

@@ -80,7 +80,7 @@ export default function BlogNotifyForm({
             />
             <button
               type="submit"
-              className="btn-shine inline-flex h-11 shrink-0 items-center justify-center bg-brand px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-brand-deep"
+              className="btn-shine inline-flex h-11 shrink-0 items-center justify-center bg-brand px-5 text-sm font-semibold text-brand-ink transition hover:-translate-y-0.5 hover:bg-brand-bright"
             >
               {content.notifyButtonLabel}
             </button>
